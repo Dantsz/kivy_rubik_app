@@ -3,7 +3,7 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 import cv2
-
+import logging
 
 class KivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
@@ -13,10 +13,12 @@ class KivyCamera(Image):
 
     def update(self, dt):
         ret, frame = self.capture.read()
+        if frame is None:
+            logging.fatal("frame is None")
         if ret:
             # convert it to texture
             buf1 = cv2.flip(frame, 0)
-            buf = buf1.tostring()
+            buf= buf1.tostring()
             image_texture = Texture.create(
                 size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
             image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
@@ -26,7 +28,11 @@ class KivyCamera(Image):
 
 class CamApp(App):
     def build(self):
+
         self.capture = cv2.VideoCapture(0)
+
+        if not self.capture.isOpened():
+            logging.fatal("Cam is not opened")
         self.my_camera = KivyCamera(capture=self.capture, fps=30)
         return self.my_camera
 
