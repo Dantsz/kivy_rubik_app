@@ -2,12 +2,18 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.utils import platform
 import cv2
 import logging
 
 class KivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
+        self.allow_stretch = True
+        self.keep_ratio = False
+
         self.capture = capture
         Clock.schedule_interval(self.update, 1.0 / fps)
 
@@ -15,13 +21,21 @@ class KivyCamera(Image):
         ret, frame = self.capture.read()
         if frame is None:
             logging.fatal("frame is None")
+        else:
+            logging.info(f"Got frame({ret}): {frame.shape}")
         if ret:
+            #rotate 90 clockwise if on android
+            if platform == 'android':
+                frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+            # convert frame to rgb
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # convert it to texture
             buf1 = cv2.flip(frame, 0)
             buf= buf1.tostring()
             image_texture = Texture.create(
-                size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-            image_texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+                size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
+            image_texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
+
             # display image from the texture
             self.texture = image_texture
 
@@ -33,8 +47,12 @@ class CamApp(App):
 
         if not self.capture.isOpened():
             logging.fatal("Cam is not opened")
-        self.my_camera = KivyCamera(capture=self.capture, fps=30)
-        return self.my_camera
+        self.box_layout = BoxLayout(orientation='vertical')
+
+        my_camera = KivyCamera(capture=self.capture, fps=30)
+        self.box_layout.add_widget(my_camera)
+
+        return self.box_layout
 
     def on_stop(self):
         #without this, app will not exit even if the window is closed
