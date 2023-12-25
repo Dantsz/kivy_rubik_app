@@ -1,0 +1,3 @@
+[submodule "RubiksDetection"]
+	path = RubiksDetection
+	url = https://github.com/Dantsz/RubiksDetection
