@@ -5,9 +5,9 @@ from kivy.graphics.texture import Texture
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.utils import platform
-import RubiksDetection.python_scripts.features as features
-import RubiksDetection.python_scripts.filtering as filtering
-import RubiksDetection.python_scripts.viewport_properties as viewport_properties
+import RubiksDetection.rpd.features as features
+import RubiksDetection.rpd.filtering as filtering
+import RubiksDetection.rpd.viewport_properties as viewport_properties
 import cv2 as cv
 import numpy as np
 import logging
