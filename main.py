@@ -8,6 +8,7 @@ from kivy.utils import platform
 import RubiksDetection.rpd.features as features
 import RubiksDetection.rpd.filtering as filtering
 import RubiksDetection.rpd.viewport_properties as viewport_properties
+import RubiksDetection.rpd.detection_engine as rpd
 import cv2 as cv
 import numpy as np
 import logging
@@ -19,6 +20,7 @@ class KivyCamera(Image):
         self.keep_ratio = False
 
         self.capture = capture
+        self.detection_engine = rpd.DetectionEngine()
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
@@ -31,18 +33,9 @@ class KivyCamera(Image):
             #rotate 90 clockwise if on android
             if platform == 'android':
                 frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-
-            img = frame.copy()
-            frame = filtering.canny_amax_adaptive_filter(frame)
-            contours, hierarchy = cv.findContours(frame, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-            contours = features.contours_filter_small_area(contours, viewport_properties.FEATURES_FILTER_MIN_AREA)
-            contours = features.contours_filter_solidity(contours, viewport_properties.FEATURES_FILTER_SOLIDITY)
-            contours = features.contours_filter_positional_2(contours, viewport_properties.FEATURES_FILTER_POSITIONAL_2_DISTANCE)
-            contours = features.approx_polygon_from_contour(contours)
-            img_2 = cv.drawContours(img, contours, -1, (0,255,0), 3)
-
-
-            frame = img_2
+            frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
+            self.detection_engine.process_frame(frame)
+            frame = self.detection_engine.debug_frame(frame)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
@@ -58,7 +51,6 @@ class KivyCamera(Image):
 
 class CamApp(App):
     def build(self):
-
         self.capture = cv.VideoCapture(0)
         if not self.capture.isOpened():
             logging.fatal("Cam is not opened")
@@ -72,6 +64,7 @@ class CamApp(App):
 
     def on_stop(self):
         #without this, app will not exit even if the window is closed
+        logging.info("Releasing camera")
         self.capture.release()
 
 
