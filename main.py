@@ -1,54 +1,16 @@
 from kivy.app import App
 from kivy.uix.image import Image
-from kivy.clock import Clock
-from kivy.graphics.texture import Texture
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
+from kivy.uix.spinner import Spinner
 from kivy.utils import platform
 import RubiksDetection.rpd.features as features
 import RubiksDetection.rpd.filtering as filtering
-import RubiksDetection.rpd.viewport_properties as viewport_properties
-import RubiksDetection.rpd.detection_engine as rpd
 import cv2 as cv
 import numpy as np
 import logging
-
-class KivyCamera(Image):
-    def __init__(self, capture, fps, **kwargs):
-        super(KivyCamera, self).__init__(**kwargs)
-        self.allow_stretch = True
-        self.keep_ratio = False
-
-        self.capture = capture
-        self.detection_engine = rpd.DetectionEngine()
-        Clock.schedule_interval(self.update, 1.0 / fps)
-
-    def update(self, dt):
-        ret, frame = self.capture.read()
-        if frame is None:
-            logging.fatal("frame is None")
-        else:
-            logging.info(f"Got frame({ret}): {frame.shape}")
-        if ret:
-            #rotate 90 clockwise if on android
-            if platform == 'android':
-                frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-            frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
-            self.detection_engine.process_frame(frame)
-            frame = self.detection_engine.debug_frame(frame)
-            # convert frame to rgb
-            frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            # convert it to texture
-            buf1 = cv.flip(frame, 0)
-            buf= buf1.tostring()
-            image_texture = Texture.create(
-                size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
-            image_texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
-
-            # display image from the texture
-            self.texture = image_texture
-
-
+from camera import KivyCamera
 class CamApp(App):
     def build(self):
         self.capture = cv.VideoCapture(0)
@@ -57,18 +19,30 @@ class CamApp(App):
         logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
         self.root = FloatLayout()
 
-        my_camera = KivyCamera(capture=self.capture, fps=30)
-        self.root.add_widget(my_camera)
+        self.camera = KivyCamera(capture=self.capture, fps=30)
+        self.root.add_widget(self.camera)
 
-        settings_button = Button(text='Settings', size_hint=(None, None), size=(100, 50),
+        setting_layout = BoxLayout(orientation='horizontal',size_hint=(None, None), size=(200, 50),
                                  pos_hint={'right': 1, 'bottom': 1})
+
+        settings_button = Button(text='Settings')
         settings_button.bind(on_release=self.on_settings_button_press)
-        self.root.add_widget(settings_button)
+
+        image_spinner = Spinner(text="Display mode", values=("Original","Filtered","Contours"))
+        image_spinner.bind(text=self.on_display_mode_change)
+        setting_layout.add_widget(settings_button)
+        setting_layout.add_widget(image_spinner)
+        self.root.add_widget(setting_layout)
 
         return self.root
 
     def on_settings_button_press(self, instance):
         pass
+
+    def on_display_mode_change(self, instance, value):
+        print("Display mode changed to: " + value)
+        self.camera.change_display_mode(value)
+
 
 
     def on_stop(self):
