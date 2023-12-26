@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.utils import platform
 import RubiksDetection.rpd.features as features
@@ -55,12 +55,21 @@ class CamApp(App):
         if not self.capture.isOpened():
             logging.fatal("Cam is not opened")
         logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
-        self.box_layout = BoxLayout(orientation='vertical')
+        self.root = FloatLayout()
 
         my_camera = KivyCamera(capture=self.capture, fps=30)
-        self.box_layout.add_widget(my_camera)
+        self.root.add_widget(my_camera)
 
-        return self.box_layout
+        settings_button = Button(text='Settings', size_hint=(None, None), size=(100, 50),
+                                 pos_hint={'right': 1, 'bottom': 1})
+        settings_button.bind(on_release=self.on_settings_button_press)
+        self.root.add_widget(settings_button)
+
+        return self.root
+
+    def on_settings_button_press(self, instance):
+        pass
+
 
     def on_stop(self):
         #without this, app will not exit even if the window is closed
