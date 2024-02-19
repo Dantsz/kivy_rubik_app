@@ -28,8 +28,8 @@ class KivyCamera(Image):
         ret, frame = self.capture.read()
         if frame is None:
             logging.fatal("frame is None")
-        else:
-            logging.info(f"Got frame({ret}): {frame.shape}")
+        # else:
+            # logging.info(f"Got frame({ret}): {frame.shape}")
         if ret:
             #rotate 90 clockwise if on android
             if platform == 'android':
