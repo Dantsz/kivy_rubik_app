@@ -5,10 +5,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from kivy.utils import platform
-import RubiksDetection.rpd.features as features
-import RubiksDetection.rpd.filtering as filtering
 import cv2 as cv
-import numpy as np
 import logging
 from camera import KivyCamera
 class CamApp(App):
