@@ -8,8 +8,13 @@ from kivy.utils import platform
 import cv2 as cv
 import logging
 from camera import KivyCamera
+
+
 class CamApp(App):
+    """Main application."""
+
     def build(self):
+        """Build a camera app."""
         self.capture = cv.VideoCapture(0)
         if not self.capture.isOpened():
             logging.fatal("Cam is not opened")
@@ -19,17 +24,22 @@ class CamApp(App):
         self.camera = KivyCamera(capture=self.capture, fps=30)
         self.root.add_widget(self.camera)
 
-        setting_layout = BoxLayout(orientation='horizontal',size_hint=(None, None), size=(200, 50),
+        setting_layout = BoxLayout(orientation='vertical', size_hint=(None, None), size=(100, 50),
                                  pos_hint={'right': 1, 'bottom': 1})
+
+        image_spinner = Spinner(text="Display mode", values=("Original", "Filtered", "Contours"))
+        image_spinner.bind(text=self.on_display_mode_change)
 
         settings_button = Button(text='Settings')
         settings_button.bind(on_release=self.on_settings_button_press)
 
-        image_spinner = Spinner(text="Display mode", values=("Original","Filtered","Contours"))
-        image_spinner.bind(text=self.on_display_mode_change)
         setting_layout.add_widget(settings_button)
         setting_layout.add_widget(image_spinner)
+
         self.root.add_widget(setting_layout)
+
+        capture_button = Button(text='Capture', size_hint=(None, None),  size=(100, 50), pos_hint={'center_x': 0.5, 'center_y': 0.10})
+        self.root.add_widget(capture_button)
 
         return self.root
 
@@ -40,10 +50,8 @@ class CamApp(App):
         print("Display mode changed to: " + value)
         self.camera.change_display_mode(value)
 
-
-
     def on_stop(self):
-        #without this, app will not exit even if the window is closed
+        # without this, app will not exit even if the window is closed
         logging.info("Releasing camera")
         self.capture.release()
 
