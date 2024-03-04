@@ -10,7 +10,7 @@ import cv2 as cv
 import logging
 import asyncio
 
-from camera import KivyCamera
+from camera import RubikCamera
 
 
 class CamApp(App):
@@ -24,7 +24,7 @@ class CamApp(App):
         logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
         self.root = FloatLayout()
 
-        self.camera = KivyCamera(capture=self.capture, fps=30)
+        self.camera = RubikCamera(capture=self.capture, fps=30)
         self.root.add_widget(self.camera)
 
         setting_layout = BoxLayout(orientation='vertical',

@@ -16,19 +16,24 @@ from kivy.utils import platform
 import RubiksDetection.rpd.viewport_properties as vp
 
 
-class KivyCamera(Image):
+class RubikCamera(Image):
+    """Camera widget running rubik face detection.
+
+    Displays the camera view with added debug information.
+    """
+
     def __init__(self, capture, fps, **kwargs):
-        super(KivyCamera, self).__init__(**kwargs)
+        super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
 
         self.capture = capture
         self.display_mode = "Original"
         self.detection_engine = rpd.DetectionEngine()
-        Clock.schedule_interval(self.update, 1.0 / fps)
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
             vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH
+        Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
         """Update."""
