@@ -14,6 +14,8 @@ from kivy.uix.button import Button
 from kivy.utils import platform
 
 import RubiksDetection.rpd.viewport_properties as vp
+
+
 class KivyCamera(Image):
     def __init__(self, capture, fps, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)

@@ -5,8 +5,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from kivy.utils import platform
+
 import cv2 as cv
 import logging
+import asyncio
+
 from camera import KivyCamera
 
 
@@ -61,6 +64,9 @@ class CamApp(App):
         logging.info("Releasing camera")
         self.capture.release()
 
-
 if __name__ == '__main__':
-    CamApp().run()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(
+        CamApp().async_run()
+    )
+    loop.close()
