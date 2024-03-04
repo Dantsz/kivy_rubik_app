@@ -24,10 +24,13 @@ class CamApp(App):
         self.camera = KivyCamera(capture=self.capture, fps=30)
         self.root.add_widget(self.camera)
 
-        setting_layout = BoxLayout(orientation='vertical', size_hint=(None, None), size=(100, 50),
-                                 pos_hint={'right': 1, 'bottom': 1})
+        setting_layout = BoxLayout(orientation='vertical',
+                                   size_hint=(None, None),
+                                   size=(100, 50),
+                                   pos_hint={'right': 1, 'bottom': 1})
 
-        image_spinner = Spinner(text="Display mode", values=("Original", "Filtered", "Contours"))
+        image_spinner = Spinner(text="Display mode",
+                                values=("Original", "Filtered", "Contours"))
         image_spinner.bind(text=self.on_display_mode_change)
 
         settings_button = Button(text='Settings')
@@ -38,7 +41,10 @@ class CamApp(App):
 
         self.root.add_widget(setting_layout)
 
-        capture_button = Button(text='Capture', size_hint=(None, None),  size=(100, 50), pos_hint={'center_x': 0.5, 'center_y': 0.10})
+        capture_button = Button(text='Capture',
+                                size_hint=(None, None),
+                                size=(100, 50),
+                                pos_hint={'center_x': 0.5, 'center_y': 0.10})
         self.root.add_widget(capture_button)
 
         return self.root

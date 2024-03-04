@@ -29,25 +29,24 @@ class KivyCamera(Image):
             vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH
 
     def update(self, dt):
+        """Update."""
         ret, frame = self.capture.read()
         if frame is None:
             logging.fatal("frame is None")
         # else:
             # logging.info(f"Got frame({ret}): {frame.shape}")
         if ret:
-            #rotate 90 clockwise if on android
+            # rotate 90 clockwise if on android
             if platform == 'android':
                 frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
 
             frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
 
-
             self.detection_engine.process_frame(frame)
-
 
             #  Display frame
             if self.display_mode == "Contours":
-                frame =  np.zeros((viewport_properties.HEIGHT, viewport_properties.WIDTH, 3), np.uint8)
+                frame = np.zeros((viewport_properties.HEIGHT, viewport_properties.WIDTH, 3), np.uint8)
             if self.display_mode == "Original":
                 pass
             if self.display_mode == "Filtered":
@@ -59,7 +58,7 @@ class KivyCamera(Image):
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
             buf1 = cv.flip(frame, 0)
-            buf= buf1.tostring()
+            buf = buf1.tostring()
             image_texture = Texture.create(
                 size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
             image_texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
