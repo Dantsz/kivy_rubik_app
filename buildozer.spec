@@ -1,10 +1,10 @@
 [app]
 
 # (str) Title of your application
-title = My Application1
+title = RubiksDetector
 
 # (str) Package name
-package.name = myapp1
+package.name = rubiksdetector
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.test
