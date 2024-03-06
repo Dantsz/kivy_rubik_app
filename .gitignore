@@ -1,3 +1,4 @@
 .buildozer/
 bin/
 __pycache__/
+rubik_state.png
