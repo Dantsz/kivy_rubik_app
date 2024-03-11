@@ -78,7 +78,7 @@ class RubikCamera(Image):
         self.display_mode = mode
 
     def on_capture(self):
-        logging.info(f"Capturing face: {len(self.state.faces)}")
+        logging.info(f"Capturing face: {len(self.state.face_data)}")
         if(self.detection_engine.last_face is not None):
             self.state.consume_face(self.detection_engine.last_face)
             self.detection_engine.last_face = None
