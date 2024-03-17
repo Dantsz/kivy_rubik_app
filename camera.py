@@ -14,7 +14,7 @@ from kivy.uix.button import Button
 from kivy.utils import platform
 
 import RubiksDetection.rpd.viewport_properties as vp
-import RubiksDetection.rpd.rubik_state as rbs
+import RubiksDetection.rpd.labeling as rbs
 
 class RubikCamera(Image):
     """Camera widget running rubik face detection.
@@ -33,7 +33,7 @@ class RubikCamera(Image):
         self.capture = capture
         self.display_mode = "Original"
         self.detection_engine = rpd.DetectionEngine()
-        self.state = rbs.RubikStateEngine()
+        self.state = rbs.LabelingEngine()
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
             vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH

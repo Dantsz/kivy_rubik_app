@@ -2,7 +2,7 @@ from pickle import load
 from RubiksDetection.rpd.metafeatures import Face
 import cv2 as cv
 import matplotlib.pyplot as plt
-from RubiksDetection.rpd.rubik_state import RubikStateEngine
+from RubiksDetection.rpd.labeling import LabelingEngine
 import os
 
 #read each color file in the test_data folder
@@ -34,7 +34,7 @@ else:
     raise ValueError("Some faces were not loaded correctly")
 
 # Create a RubikStateEngine object
-rubik_state = RubikStateEngine()
+rubik_state = LabelingEngine()
 # Iterate over each face array
 for face_array in face_arrays:
     rubik_state.consume_face(face_array[0])
