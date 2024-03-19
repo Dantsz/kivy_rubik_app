@@ -10,6 +10,7 @@ from kivy.utils import platform
 
 import cv2 as cv
 import logging
+
 import asyncio
 
 from camera import RubikCamera
@@ -34,10 +35,6 @@ class CamApp(App):
                                    size=(100, 50),
                                    pos_hint={'right': 1, 'top': 1})
 
-        image_spinner = Spinner(text="Display mode",
-                                values=("Original", "Filtered", "Contours"))
-        image_spinner.bind(text=self.on_display_mode_change)
-
         settings_dropdown = DropDown()
         contours_button = Button(text='Contours', size_hint_y=None, height=44)
         contours_button.bind(on_release=self.on_contours_button_press)
@@ -51,13 +48,15 @@ class CamApp(App):
         orientation_button.bind(on_release=self.on_orientation_button_press)
         settings_dropdown.add_widget(orientation_button)
 
+        image_spinner = Spinner(text="Display mode",
+                                values=("Original", "Filtered", "Contours"), size_hint_y=None, height=44)
+        image_spinner.bind(text=self.on_display_mode_change)
+        settings_dropdown.add_widget(image_spinner)
 
+        display_button = Button(text='Display')
+        display_button.bind(on_release=settings_dropdown.open)
 
-        settings_button = Button(text='Settings')
-        settings_button.bind(on_release=settings_dropdown.open)
-
-        setting_layout.add_widget(settings_button)
-        setting_layout.add_widget(image_spinner)
+        setting_layout.add_widget(display_button)
 
         self.root.add_widget(setting_layout)
 
