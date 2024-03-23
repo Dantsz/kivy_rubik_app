@@ -89,4 +89,5 @@ class RubikCamera(Image):
             self.state.fit()
             img = self.state.debug_image()
             cv.imwrite("rubik_state.png", img)
+            print(self.state.stateString())
             self.state.reset()
