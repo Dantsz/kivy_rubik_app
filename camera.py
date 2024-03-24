@@ -15,6 +15,7 @@ from kivy.utils import platform
 
 import RubiksDetection.rpd.viewport_properties as vp
 import RubiksDetection.rpd.labeling as rbs
+import kociemba
 
 class RubikCamera(Image):
     """Camera widget running rubik face detection.
@@ -90,4 +91,6 @@ class RubikCamera(Image):
             img = self.state.debug_image()
             cv.imwrite("rubik_state.png", img)
             print(self.state.stateString())
+            print(kociemba.solve(self.state.stateString()))
+
             self.state.reset()
