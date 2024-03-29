@@ -48,12 +48,16 @@ class CamApp(App):
 
         self.root.add_widget(setting_layout)
 
+        capture_layout = BoxLayout(orientation='horizontal',
+                                      size_hint=(None, None),
+                                      size=(100, 50),
+                                      pos_hint={'center_x': 0.5, 'center_y': 0.10})
         capture_button = Button(text='Capture',
                                 size_hint=(None, None),
-                                size=(100, 50),
-                                pos_hint={'center_x': 0.5, 'center_y': 0.10})
+                                size=(100, 50))
         capture_button.bind(on_release=self.on_capture_button_press)
-        self.root.add_widget(capture_button)
+        capture_layout.add_widget(capture_button)
+        self.root.add_widget(capture_layout)
 
         return self.root
 
