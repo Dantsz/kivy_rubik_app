@@ -15,6 +15,10 @@ import asyncio
 
 from camera import RubikCamera
 
+def condition_color(condition: bool) -> str:
+    """Return a color based on a condition."""
+    return get_color_from_hex("#00FF00") if condition else get_color_from_hex("#FF0000")
+
 class CamApp(App):
     """Main application."""
 
@@ -57,6 +61,12 @@ class CamApp(App):
                                 size=(100, 50))
         capture_button.bind(on_release=self.on_capture_button_press)
         capture_layout.add_widget(capture_button)
+
+        reset_button = Button(text="Reset",
+                                size_hint=(None, None),
+                                size=(50, 50))
+        capture_layout.add_widget(reset_button)
+
         self.root.add_widget(capture_layout)
 
         return self.root
@@ -65,14 +75,17 @@ class CamApp(App):
         settings_dropdown = DropDown()
         contours_button = Button(text='Contours', size_hint_y=None, height=44)
         contours_button.bind(on_release=self.on_contours_button_press)
+        contours_button.background_color = condition_color(self.camera.draw_contours)
         settings_dropdown.add_widget(contours_button)
 
         face_button = Button(text='Face', size_hint_y=None, height=44)
         face_button.bind(on_release=self.on_face_button_press)
+        face_button.background_color = condition_color(self.camera.draw_face)
         settings_dropdown.add_widget(face_button)
 
         orientation_button = Button(text='Orientation', size_hint_y=None, height=44)
         orientation_button.bind(on_release=self.on_orientation_button_press)
+        orientation_button.background_color = condition_color(self.camera.draw_orientation)
         settings_dropdown.add_widget(orientation_button)
 
         image_spinner = Spinner(text="Display mode",
@@ -98,12 +111,15 @@ class CamApp(App):
 
     def on_orientation_button_press(self, instance):
         self.camera.draw_orientation = not self.camera.draw_orientation
+        instance.background_color = condition_color(self.camera.draw_orientation)
 
     def on_contours_button_press(self, instance):
         self.camera.draw_contours = not self.camera.draw_contours
+        instance.background_color = condition_color(self.camera.draw_contours)
 
     def on_face_button_press(self, instance):
         self.camera.draw_face = not self.camera.draw_face
+        instance.background_color = condition_color(self.camera.draw_face)
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
