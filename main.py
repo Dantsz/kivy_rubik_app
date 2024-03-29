@@ -88,6 +88,11 @@ class CamApp(App):
         orientation_button.background_color = condition_color(self.camera.draw_orientation)
         settings_dropdown.add_widget(orientation_button)
 
+        avg_color_button = Button(text='Avg Color', size_hint_y=None, height=44)
+        avg_color_button.bind(on_release=self.on_avg_color_button_press)
+        avg_color_button.background_color = condition_color(self.camera.draw_avg_color)
+        settings_dropdown.add_widget(avg_color_button)
+
         image_spinner = Spinner(text="Display mode",
                                 values=("Original", "Filtered", "Contours"), size_hint_y=None, height=44)
         image_spinner.bind(text=self.on_display_mode_change)
@@ -120,6 +125,10 @@ class CamApp(App):
     def on_face_button_press(self, instance):
         self.camera.draw_face = not self.camera.draw_face
         instance.background_color = condition_color(self.camera.draw_face)
+
+    def on_avg_color_button_press(self, instance):
+        self.camera.draw_avg_color = not self.camera.draw_avg_color
+        instance.background_color = condition_color(self.camera.draw_avg_color)
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
