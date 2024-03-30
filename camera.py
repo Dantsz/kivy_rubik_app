@@ -31,6 +31,7 @@ class RubikCamera(Image):
         self.draw_contours = True
         self.draw_face = True
         self.draw_avg_color = False
+        self.draw_coordinates = False
 
         self.capture = capture
         self.display_mode = "Original"
@@ -66,7 +67,7 @@ class RubikCamera(Image):
                 frame = filtering.canny_amax_adaptive_filter(frame)
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
-            frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color)
+            frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color, draw_coordinates=self.draw_coordinates)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
