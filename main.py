@@ -65,11 +65,15 @@ class CamApp(App):
         reset_button = Button(text="Reset",
                                 size_hint=(None, None),
                                 size=(50, 50))
+        reset_button.bind(on_release=self.on_reset)
         capture_layout.add_widget(reset_button)
 
         self.root.add_widget(capture_layout)
 
         return self.root
+
+    def on_reset(self,instance):
+        self.camera.reset()
 
     def build_display_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()

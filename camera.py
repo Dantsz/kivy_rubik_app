@@ -83,6 +83,10 @@ class RubikCamera(Image):
     def change_display_mode(self, mode: str):
         self.display_mode = mode
 
+    def reset(self):
+        logging.info("Resetting state")
+        self.state.reset()
+
     def on_capture(self):
         logging.info(f"Capturing face: {len(self.state.face_data)}")
         if(self.detection_engine.last_face is not None):
@@ -95,4 +99,4 @@ class RubikCamera(Image):
             moves = solve.solve(self.state.state())
             print(moves)
 
-            self.state.reset()
+            self.reset()
