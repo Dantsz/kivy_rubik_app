@@ -1,6 +1,9 @@
-from statemachine import StateMachine, State
-from RubiksDetection.rpd.detection_engine import DetectionEngine
 import logging
+from statemachine import StateMachine, State
+
+from RubiksDetection.rpd.detection_engine import DetectionEngine
+from RubiksDetection.rpd.labeling import LabelingEngine
+
 
 class RubikDetectionState(StateMachine):
     """The state machine for the Rubik's Cube detection application"""
@@ -47,11 +50,13 @@ class RubikDetectionState(StateMachine):
 
     def on_reset(self):
         logging.info("AppState: Resetting state")
+        self.labeling_engine.reset()
 
     def after_transition(self):
         img_path = "readme_trafficlightmachine.png"
         self._graph().write_png(img_path)
 
-    def __init__(self, detection_engine: DetectionEngine):
+    def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine):
         super().__init__()
         self.detection_engine = detection_engine
+        self.labeling_engine = labeling_engine

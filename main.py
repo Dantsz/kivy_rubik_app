@@ -38,7 +38,7 @@ class CamApp(App):
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.camera = RubikCamera(capture=self.capture, detection_engine=self.detection_engine, labeling_engine=self.labeling_engine, fps=15)
-        self.state = app_state.RubikDetectionState(self.detection_engine)
+        self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine)
 
         self.root.add_widget(self.camera)
 
