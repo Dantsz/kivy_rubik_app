@@ -84,20 +84,3 @@ class RubikCamera(Image):
 
     def change_display_mode(self, mode: str):
         self.display_mode = mode
-
-    def reset(self):
-        logging.info("Resetting state")
-
-    def on_capture(self):
-        logging.info(f"Capturing face: {len(self.state.face_data)}")
-        if(self.detection_engine.last_face is not None):
-            self.state.consume_face(self.detection_engine.last_face)
-            self.detection_engine.last_face = None
-        if self.state.is_complete():
-            self.state.fit()
-            img = self.state.debug_image()
-            cv.imwrite("rubik_state.png", img)
-            moves = solve.solve(self.state.state())
-            print(moves)
-
-            self.reset()

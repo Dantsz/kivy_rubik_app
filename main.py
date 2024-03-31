@@ -81,7 +81,6 @@ class CamApp(App):
         return self.root
 
     def on_reset(self,instance):
-        self.camera.reset()
         self.state.send('reset')
 
     def build_display_dropdown(self) -> DropDown:
@@ -130,7 +129,6 @@ class CamApp(App):
         self.camera.change_display_mode(value)
 
     def on_capture_button_press(self, instance):
-        self.camera.on_capture()
         self.state.send('capture')
 
     def on_orientation_button_press(self, instance):
