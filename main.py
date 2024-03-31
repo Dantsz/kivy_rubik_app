@@ -13,7 +13,11 @@ import logging
 
 import asyncio
 
+
+from RubiksDetection.rpd.detection_engine import DetectionEngine
+
 from camera import RubikCamera
+import app_state
 
 def condition_color(condition: bool) -> str:
     """Return a color based on a condition."""
@@ -30,7 +34,9 @@ class CamApp(App):
         logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
         self.root = FloatLayout()
 
-        self.camera = RubikCamera(capture=self.capture, fps=15)
+        self.detection_engine = DetectionEngine()
+        self.camera = RubikCamera(capture=self.capture, detection_engine=self.detection_engine, fps=15)
+        self.state = app_state.RubikDetectionState(self.detection_engine)
 
         self.root.add_widget(self.camera)
 
@@ -74,6 +80,7 @@ class CamApp(App):
 
     def on_reset(self,instance):
         self.camera.reset()
+        self.state.send('reset')
 
     def build_display_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()
@@ -122,6 +129,7 @@ class CamApp(App):
 
     def on_capture_button_press(self, instance):
         self.camera.on_capture()
+        self.state.send('capture')
 
     def on_orientation_button_press(self, instance):
         self.camera.draw_orientation = not self.camera.draw_orientation

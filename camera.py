@@ -23,7 +23,7 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, capture, fps, **kwargs):
+    def __init__(self, capture, fps, detection_engine: rpd.DetectionEngine,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
@@ -35,7 +35,7 @@ class RubikCamera(Image):
 
         self.capture = capture
         self.display_mode = "Original"
-        self.detection_engine = rpd.DetectionEngine()
+        self.detection_engine = detection_engine
         self.state = rbs.LabelingEngine()
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
