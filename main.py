@@ -15,6 +15,7 @@ import asyncio
 
 
 from RubiksDetection.rpd.detection_engine import DetectionEngine
+from RubiksDetection.rpd.labeling import LabelingEngine
 
 from camera import RubikCamera
 import app_state
@@ -35,7 +36,8 @@ class CamApp(App):
         self.root = FloatLayout()
 
         self.detection_engine = DetectionEngine()
-        self.camera = RubikCamera(capture=self.capture, detection_engine=self.detection_engine, fps=15)
+        self.labeling_engine = LabelingEngine()
+        self.camera = RubikCamera(capture=self.capture, detection_engine=self.detection_engine, labeling_engine=self.labeling_engine, fps=15)
         self.state = app_state.RubikDetectionState(self.detection_engine)
 
         self.root.add_widget(self.camera)

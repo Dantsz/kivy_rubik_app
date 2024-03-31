@@ -3,6 +3,7 @@ import RubiksDetection.rpd.viewport_properties as viewport_properties
 import RubiksDetection.rpd.solve as solve
 
 from RubiksDetection.rpd.detection_engine import DetectionEngine
+from RubiksDetection.rpd.labeling import LabelingEngine
 
 import cv2 as cv
 import numpy as np
@@ -11,12 +12,10 @@ import logging
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.button import Button
 from kivy.utils import platform
 
 import RubiksDetection.rpd.viewport_properties as vp
-import RubiksDetection.rpd.labeling as rbs
 
 class RubikCamera(Image):
     """Camera widget running rubik face detection.
@@ -24,7 +23,7 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, capture, fps, detection_engine: DetectionEngine,  **kwargs):
+    def __init__(self, capture, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
@@ -36,8 +35,10 @@ class RubikCamera(Image):
 
         self.capture = capture
         self.display_mode = "Original"
+
         self.detection_engine = detection_engine
-        self.state = rbs.LabelingEngine()
+        self.state = labeling_engine
+
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
             vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH
@@ -86,7 +87,6 @@ class RubikCamera(Image):
 
     def reset(self):
         logging.info("Resetting state")
-        self.state.reset()
 
     def on_capture(self):
         logging.info(f"Capturing face: {len(self.state.face_data)}")
