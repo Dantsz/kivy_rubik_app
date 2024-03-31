@@ -53,4 +53,5 @@ class RubikDetectionState(StateMachine):
         self._graph().write_png(img_path)
 
     def __init__(self, detection_engine: DetectionEngine):
+        super().__init__()
         self.detection_engine = detection_engine
