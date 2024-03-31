@@ -36,7 +36,7 @@ class RubikDetectionState(StateMachine):
         | doneCubeCapture.to(WhiteFaceReading)
     )
 
-    def capture_action(self):
+    def on_capture(self):
         logging.info(f"Capturing face: {len(self.labeling_engine.face_data)}")
         if(self.detection_engine.last_face is not None):
             self.labeling_engine.consume_face(self.detection_engine.last_face)
@@ -47,9 +47,6 @@ class RubikDetectionState(StateMachine):
             cv.imwrite("rubik_state.png", img)
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
-
-    def after_capture(self):
-        self.capture_action()
 
     def on_enter_WhiteFaceReading(self):
         logging.info(f"AppState: Reading white face")
