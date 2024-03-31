@@ -1,8 +1,9 @@
-import RubiksDetection.rpd.features as features
 import RubiksDetection.rpd.filtering as filtering
 import RubiksDetection.rpd.viewport_properties as viewport_properties
-import RubiksDetection.rpd.detection_engine as rpd
 import RubiksDetection.rpd.solve as solve
+
+from RubiksDetection.rpd.detection_engine import DetectionEngine
+
 import cv2 as cv
 import numpy as np
 import logging
@@ -23,7 +24,7 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, capture, fps, detection_engine: rpd.DetectionEngine,  **kwargs):
+    def __init__(self, capture, fps, detection_engine: DetectionEngine,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
