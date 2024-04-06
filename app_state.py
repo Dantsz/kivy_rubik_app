@@ -3,6 +3,7 @@ from statemachine import StateMachine, State
 
 from RubiksDetection.rpd.detection_engine import DetectionEngine
 from RubiksDetection.rpd.labeling import LabelingEngine
+from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
 import RubiksDetection.rpd.solve as solve
 
 import cv2 as cv
@@ -16,6 +17,8 @@ class RubikDetectionState(StateMachine):
     BlueFaceRead = State()
 
     doneCubeCapture = State()
+
+    # displayState = State()
 
     capture = (
         WhiteFaceReading.to(RedFaceRead)
@@ -47,6 +50,8 @@ class RubikDetectionState(StateMachine):
             cv.imwrite("rubik_state.png", img)
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
+            print(self.labeling_engine.color_centers)
+            self.solution_engine.consume_solution(self.labeling_engine.color_centers, moves)
 
     def on_enter_WhiteFaceReading(self):
         logging.info(f"AppState: Reading white face")
@@ -64,12 +69,14 @@ class RubikDetectionState(StateMachine):
     def on_reset(self):
         logging.info("AppState: Resetting state")
         self.labeling_engine.reset()
+        self.solution_engine.reset()
 
     def after_transition(self):
         img_path = "readme_trafficlightmachine.png"
         self._graph().write_png(img_path)
 
-    def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine):
+    def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_display_engine: SolutionDisplayEngine):
         super().__init__()
         self.detection_engine = detection_engine
         self.labeling_engine = labeling_engine
+        self.solution_engine = solution_display_engine

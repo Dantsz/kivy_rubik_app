@@ -4,6 +4,7 @@ import RubiksDetection.rpd.solve as solve
 
 from RubiksDetection.rpd.detection_engine import DetectionEngine
 from RubiksDetection.rpd.labeling import LabelingEngine
+from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
 
 import cv2 as cv
 import numpy as np
@@ -23,7 +24,7 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, capture, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine,  **kwargs):
+    def __init__(self, capture, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_engine: SolutionDisplayEngine, **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
@@ -38,6 +39,7 @@ class RubikCamera(Image):
 
         self.detection_engine = detection_engine
         self.state = labeling_engine
+        self.solution_display = solution_engine
 
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
@@ -70,6 +72,8 @@ class RubikCamera(Image):
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
             frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color, draw_coordinates=self.draw_coordinates)
+            if self.solution_display.ready() and self.detection_engine.last_frame_detected_face():
+                frame = self.solution_display.display_solution(frame, self.state.color_centers)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
