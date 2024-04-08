@@ -72,8 +72,9 @@ class RubikDetectionState(StateMachine):
         self.solution_engine.reset()
 
     def after_transition(self):
-        img_path = "readme_trafficlightmachine.png"
-        self._graph().write_png(img_path)
+        # img_path = "readme_trafficlightmachine.png"
+        # self._graph().write_png(img_path)
+        pass
 
     def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_display_engine: SolutionDisplayEngine):
         super().__init__()
