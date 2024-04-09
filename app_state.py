@@ -51,7 +51,7 @@ class RubikDetectionState(StateMachine):
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
             print(self.labeling_engine.color_centers)
-            self.solution_engine.consume_solution(self.labeling_engine.color_centers, moves)
+            self.solution_engine.consume_solution(self.labeling_engine.color_centers, self.labeling_engine.state(), moves)
 
     def on_enter_WhiteFaceReading(self):
         logging.info(f"AppState: Reading white face")
