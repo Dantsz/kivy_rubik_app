@@ -73,7 +73,7 @@ class RubikCamera(Image):
 
             frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color, draw_coordinates=self.draw_coordinates)
             if self.solution_display.ready() and self.detection_engine.last_frame_detected_face() and self.detection_engine.last_face is not None:
-                frame = self.solution_display.display_solution(frame, self.detection_engine.last_face)
+                frame, _status = self.solution_display.display_solution(frame, self.detection_engine.last_face)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
