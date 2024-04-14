@@ -33,6 +33,7 @@ class RubikCamera(Image):
         self.draw_face = True
         self.draw_avg_color = False
         self.draw_coordinates = False
+        self.draw_solution = True
 
         self.capture = capture
         self.display_mode = "Original"
@@ -72,7 +73,7 @@ class RubikCamera(Image):
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
             frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color, draw_coordinates=self.draw_coordinates)
-            if self.solution_display.ready() and self.detection_engine.last_face is not None:
+            if self.solution_display.ready() and self.detection_engine.last_face is not None and self.draw_solution:
                 frame, _status = self.solution_display.display_solution(frame, self.detection_engine.last_face)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)

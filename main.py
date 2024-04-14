@@ -112,6 +112,11 @@ class CamApp(App):
         coordinates_button.background_color = condition_color(self.camera.draw_coordinates)
         settings_dropdown.add_widget(coordinates_button)
 
+        solution_button = Button(text='Solution', size_hint_y=None, height=44)
+        solution_button.bind(on_release=self.on_solution_button_press)
+        solution_button.background_color = condition_color(self.camera.draw_solution)
+        settings_dropdown.add_widget(solution_button)
+
         image_spinner = Spinner(text="Display mode",
                                 values=("Original", "Filtered", "Contours"), size_hint_y=None, height=44)
         image_spinner.bind(text=self.on_display_mode_change)
@@ -152,6 +157,10 @@ class CamApp(App):
     def on_coordinates_button_press(self, instance):
         self.camera.draw_coordinates = not self.camera.draw_coordinates
         instance.background_color = condition_color(self.camera.draw_coordinates)
+
+    def on_solution_button_press(self, instance):
+        self.camera.draw_solution = not self.camera.draw_solution
+        instance.background_color = condition_color(self.camera.draw_solution)
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
