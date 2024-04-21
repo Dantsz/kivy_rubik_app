@@ -16,9 +16,10 @@ class RubikDetectionState(StateMachine):
     OrangeFaceRead = State()
     BlueFaceRead = State()
 
-    doneCubeCapture = State()
+    DoneCubeCapture = State()
 
-    # displayState = State()
+    DisplayState = State()
+    EndDisplayState = State()
 
     capture = (
         WhiteFaceReading.to(RedFaceRead)
@@ -26,7 +27,7 @@ class RubikDetectionState(StateMachine):
         | GreenFaceRead.to(YellowFaceRead)
         | YellowFaceRead.to(OrangeFaceRead)
         | OrangeFaceRead.to(BlueFaceRead)
-        | BlueFaceRead.to(doneCubeCapture)
+        | BlueFaceRead.to(DoneCubeCapture)
     )
 
     reset = (
@@ -36,7 +37,16 @@ class RubikDetectionState(StateMachine):
         | YellowFaceRead.to(WhiteFaceReading)
         | OrangeFaceRead.to(WhiteFaceReading)
         | BlueFaceRead.to(WhiteFaceReading)
-        | doneCubeCapture.to(WhiteFaceReading)
+        | DisplayState.to(WhiteFaceReading)
+        | EndDisplayState.to(WhiteFaceReading)
+    )
+
+    startDisplay = (
+        DoneCubeCapture.to(DisplayState)
+    )
+
+    solved = (
+        DisplayState.to(EndDisplayState)
     )
 
     def on_capture(self):
@@ -51,6 +61,13 @@ class RubikDetectionState(StateMachine):
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
             print(self.labeling_engine.color_centers)
+            def __on_start_display():
+                self.send('startDisplay')
+            def __on_done_display():
+                self.send('solved')
+
+            self.solution_engine.on_solution_start = __on_start_display
+            self.solution_engine.on_solution_done = __on_done_display
             self.solution_engine.consume_solution(self.labeling_engine.color_centers, self.labeling_engine.state(), moves)
 
     def on_enter_WhiteFaceReading(self):
@@ -72,8 +89,8 @@ class RubikDetectionState(StateMachine):
         self.solution_engine.reset()
 
     def after_transition(self):
-        # img_path = "readme_trafficlightmachine.png"
-        # self._graph().write_png(img_path)
+        img_path = "readme_trafficlightmachine.png"
+        self._graph().write_png(img_path)
         pass
 
     def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_display_engine: SolutionDisplayEngine):
