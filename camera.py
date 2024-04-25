@@ -37,6 +37,7 @@ class RubikCamera(Image):
 
         self.capture = capture
         self.display_mode = "Original"
+        self.display_mirror = False
 
         self.detection_engine = detection_engine
         self.state = labeling_engine
@@ -60,6 +61,8 @@ class RubikCamera(Image):
                 frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
 
             frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
+            if self.display_mirror:
+                frame = cv.flip(frame, 1)
 
             self.detection_engine.process_frame(frame)
 

@@ -126,6 +126,11 @@ class CamApp(App):
 
     def build_settings_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()
+        mirror_button = Button(text='Mirror', size_hint_y=None, height=44)
+        mirror_button.bind(on_release=self.on_mirror_button_press)
+        mirror_button.background_color = condition_color(self.camera.display_mirror)
+        settings_dropdown.add_widget(mirror_button)
+
         return settings_dropdown
 
     def on_settings_button_press(self, instance):
@@ -161,6 +166,10 @@ class CamApp(App):
     def on_solution_button_press(self, instance):
         self.camera.draw_solution = not self.camera.draw_solution
         instance.background_color = condition_color(self.camera.draw_solution)
+
+    def on_mirror_button_press(self, instance):
+        self.camera.display_mirror = not self.camera.display_mirror
+        instance.background_color = condition_color(self.camera.display_mirror)
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
