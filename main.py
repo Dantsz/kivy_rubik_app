@@ -13,7 +13,6 @@ import logging
 
 import asyncio
 
-
 from RubiksDetection.rpd.detection_engine import DetectionEngine
 from RubiksDetection.rpd.labeling import LabelingEngine
 from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
@@ -25,7 +24,7 @@ def condition_color(condition: bool) -> str:
     """Return a color based on a condition."""
     return get_color_from_hex("#00FF00") if condition else get_color_from_hex("#FF0000")
 
-class CamApp(App):
+class RubiksDetectionApp(App):
     """Main application."""
 
     def build(self):
@@ -179,6 +178,6 @@ class CamApp(App):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(
-        CamApp().async_run()
+        RubiksDetectionApp().async_run()
     )
     loop.close()
