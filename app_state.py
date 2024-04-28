@@ -17,6 +17,7 @@ class RubikDetectionState(StateMachine):
     BlueFaceRead = State()
 
     DoneCubeCapture = State()
+    InconsistentCube = State()
 
     DisplayState = State()
     EndDisplayState = State()
@@ -39,6 +40,11 @@ class RubikDetectionState(StateMachine):
         | BlueFaceRead.to(WhiteFaceReading)
         | DisplayState.to(WhiteFaceReading)
         | EndDisplayState.to(WhiteFaceReading)
+        | InconsistentCube.to(WhiteFaceReading)
+    )
+
+    inconsistencyDetected = (
+        DoneCubeCapture.to(InconsistentCube)
     )
 
     startDisplay = (
@@ -55,7 +61,15 @@ class RubikDetectionState(StateMachine):
             self.labeling_engine.consume_face(self.detection_engine.last_face)
             self.detection_engine.last_face = None
         if self.labeling_engine.is_complete():
-            self.labeling_engine.fit()
+            try:
+                self.labeling_engine.fit()
+            except ValueError as e:
+                logging.warning(f"Cube is inconsistent: {e}")
+                self.solution_engine.display_errors = True
+                def __on_start_display_error():
+                    self.send('inconsistencyDetected')
+                self.solution_engine.on_solution_start =  __on_start_display_error
+                return
             img = self.labeling_engine.debug_image()
             cv.imwrite("rubik_state.png", img)
             moves = solve.solve(self.labeling_engine.state())
