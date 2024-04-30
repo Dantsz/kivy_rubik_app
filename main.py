@@ -111,6 +111,11 @@ class RubiksDetectionApp(App):
         coordinates_button.background_color = condition_color(self.camera.draw_coordinates)
         settings_dropdown.add_widget(coordinates_button)
 
+        miniature_button = Button(text='Miniature', size_hint_y=None, height=44)
+        miniature_button.bind(on_release=self.on_miniature_button_press)
+        miniature_button.background_color = condition_color(self.camera.draw_miniature)
+        settings_dropdown.add_widget(miniature_button)
+
         solution_button = Button(text='Solution', size_hint_y=None, height=44)
         solution_button.bind(on_release=self.on_solution_button_press)
         solution_button.background_color = condition_color(self.camera.draw_solution)
@@ -165,6 +170,10 @@ class RubiksDetectionApp(App):
     def on_solution_button_press(self, instance):
         self.camera.draw_solution = not self.camera.draw_solution
         instance.background_color = condition_color(self.camera.draw_solution)
+
+    def on_miniature_button_press(self, instance):
+        self.camera.draw_miniature = not self.camera.draw_miniature
+        instance.background_color = condition_color(self.camera.draw_miniature)
 
     def on_mirror_button_press(self, instance):
         self.camera.display_mirror = not self.camera.display_mirror

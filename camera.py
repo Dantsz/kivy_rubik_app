@@ -34,6 +34,7 @@ class RubikCamera(Image):
         self.draw_avg_color = False
         self.draw_coordinates = False
         self.draw_solution = True
+        self.draw_miniature = True
 
         self.capture = capture
         self.display_mode = "Original"
@@ -75,7 +76,13 @@ class RubikCamera(Image):
                 frame = filtering.canny_amax_adaptive_filter(frame)
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
-            frame = self.detection_engine.debug_frame(frame, draw_orientation= self.draw_orientation, draw_contours=self.draw_contours, draw_face=self.draw_face, draw_avg_color=self.draw_avg_color, draw_coordinates=self.draw_coordinates)
+            frame = self.detection_engine.debug_frame(frame,
+                                                      draw_orientation= self.draw_orientation,
+                                                      draw_contours=self.draw_contours,
+                                                      draw_face=self.draw_face,
+                                                      draw_avg_color=self.draw_avg_color,
+                                                      draw_coordinates=self.draw_coordinates,
+                                                      draw_miniature=self.draw_miniature)
             if self.detection_engine.last_face is not None and self.draw_solution:
                 frame, _status = self.solution_display.display(frame, self.detection_engine.last_face)
             # convert frame to rgb
