@@ -24,7 +24,7 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, capture, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_engine: SolutionDisplayEngine, **kwargs):
+    def __init__(self, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_engine: SolutionDisplayEngine, **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.keep_ratio = False
@@ -36,7 +36,8 @@ class RubikCamera(Image):
         self.draw_solution = True
         self.draw_miniature = True
 
-        self.capture = capture
+        self.on_capture_reset()
+
         self.display_mode = "Original"
         self.display_mirror = False
 
@@ -99,3 +100,19 @@ class RubikCamera(Image):
 
     def change_display_mode(self, mode: str):
         self.display_mode = mode
+
+    def on_pause(self):
+        return True
+
+    def on_stop(self):
+        logging.info("Releasing camera")
+        self.capture.release()
+
+    def on_resume(self):
+        self.on_capture_reset()
+
+    def on_capture_reset(self):
+        self.capture = cv.VideoCapture(0)
+        if not self.capture.isOpened():
+            logging.fatal("Cam is not opened")
+        logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")

@@ -29,17 +29,14 @@ class RubiksDetectionApp(App):
 
     def build(self):
         """Build a camera app."""
-        self.capture = cv.VideoCapture(0)
-        if not self.capture.isOpened():
-            logging.fatal("Cam is not opened")
-        logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
-        self.root = FloatLayout()
 
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.solution_display = SolutionDisplayEngine()
-        self.camera = RubikCamera(capture=self.capture, detection_engine=self.detection_engine, labeling_engine=self.labeling_engine, solution_engine=self.solution_display, fps=15)
+        self.camera = RubikCamera(detection_engine=self.detection_engine, labeling_engine=self.labeling_engine, solution_engine=self.solution_display, fps=15)
         self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine, self.solution_display)
+
+        self.root = FloatLayout()
 
         self.root.add_widget(self.camera)
 
@@ -84,16 +81,11 @@ class RubiksDetectionApp(App):
     def on_reset(self,instance):
         self.state.send('reset')
 
+    def on_pause(self):
+        return self.camera.on_pause()
+
     def on_resume(self):
-        self.reset_camera_capture()
-
-
-    def reset_camera_capture(self):
-        self.capture = cv.VideoCapture(0)
-        if not self.capture.isOpened():
-            logging.fatal("Cam is not opened")
-        logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
-        self.camera.capture = self.capture
+        self.camera.on_resume()
 
     def build_display_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()
@@ -192,8 +184,7 @@ class RubiksDetectionApp(App):
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
-        logging.info("Releasing camera")
-        self.capture.release()
+        self.camera.on_stop()
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
