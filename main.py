@@ -84,6 +84,17 @@ class RubiksDetectionApp(App):
     def on_reset(self,instance):
         self.state.send('reset')
 
+    def on_resume(self):
+        self.reset_camera_capture()
+
+
+    def reset_camera_capture(self):
+        self.capture = cv.VideoCapture(0)
+        if not self.capture.isOpened():
+            logging.fatal("Cam is not opened")
+        logging.info(f"Camera format is: {self.capture.get(cv.CAP_PROP_FORMAT)}")
+        self.camera.capture = self.capture
+
     def build_display_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()
         contours_button = Button(text='Contours', size_hint_y=None, height=44)
