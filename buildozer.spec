@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,numpy,opencv==4.5.2,opencv_extras==4.5.2,matplotlib,pydantic, kociemba, pydot, python-statemachine
+requirements = python3,kivy,numpy,opencv==4.5.2,opencv_extras==4.5.2,matplotlib, kociemba, pydot, python-statemachine
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
