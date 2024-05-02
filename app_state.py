@@ -70,8 +70,12 @@ class RubikDetectionState(StateMachine):
                     self.send('inconsistencyDetected')
                 self.solution_engine.on_solution_start =  __on_start_display_error
                 return
-            # img = self.labeling_engine.debug_image()
-            # cv.imwrite("rubik_state.png", img)
+            img = self.labeling_engine.debug_image_2d()
+            cv.imwrite("rubik_state_2d.png", img)
+
+            img = self.labeling_engine.debug_image_3d()
+            cv.imwrite("rubik_state_3d.png", img)
+
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
             print(self.labeling_engine.color_centers)
@@ -103,7 +107,7 @@ class RubikDetectionState(StateMachine):
         self.solution_engine.reset()
 
     def after_transition(self):
-        # img_path = "readme_trafficlightmachine.png"
+        # img_path = "state_machine.png"
         # self._graph().write_png(img_path)
         pass
 
