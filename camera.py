@@ -24,26 +24,16 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, fps, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_engine: SolutionDisplayEngine, **kwargs):
+    def __init__(self, fps, debug_frame, on_new_frame,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
-        self.keep_ratio = False
-        self.draw_orientation = False
-        self.draw_contours = True
-        self.draw_face = True
-        self.draw_avg_color = False
-        self.draw_coordinates = False
-        self.draw_solution = True
-        self.draw_miniature = True
-
         self.on_capture_reset()
 
         self.display_mode = "Original"
         self.display_mirror = False
 
-        self.detection_engine = detection_engine
-        self.state = labeling_engine
-        self.solution_display = solution_engine
+        self.on_new_frame = on_new_frame
+        self.debugframe = debug_frame
 
         # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
         if platform == 'android':
@@ -66,7 +56,7 @@ class RubikCamera(Image):
             if self.display_mirror:
                 frame = cv.flip(frame, 1)
 
-            self.detection_engine.process_frame(frame)
+            self.on_new_frame(frame)
 
             #  Display frame
             if self.display_mode == "Contours":
@@ -77,15 +67,7 @@ class RubikCamera(Image):
                 frame = filtering.canny_amax_adaptive_filter(frame)
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
-            frame = self.detection_engine.debug_frame(frame,
-                                                      draw_orientation= self.draw_orientation,
-                                                      draw_contours=self.draw_contours,
-                                                      draw_face=self.draw_face,
-                                                      draw_avg_color=self.draw_avg_color,
-                                                      draw_coordinates=self.draw_coordinates,
-                                                      draw_miniature=self.draw_miniature)
-            if self.detection_engine.last_face is not None and self.draw_solution:
-                frame, _status = self.solution_display.display(frame, self.detection_engine.last_face)
+            frame = self.debugframe(frame)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture

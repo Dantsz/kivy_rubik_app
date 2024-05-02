@@ -33,8 +33,17 @@ class RubiksDetectionApp(App):
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.solution_display = SolutionDisplayEngine()
-        self.camera = RubikCamera(detection_engine=self.detection_engine, labeling_engine=self.labeling_engine, solution_engine=self.solution_display, fps=15)
+        self.camera = RubikCamera(on_new_frame=self.on_new_frame, debug_frame=self.debug_frame, fps=15)
         self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine, self.solution_display)
+
+        self.keep_ratio = False
+        self.draw_orientation = False
+        self.draw_contours = True
+        self.draw_face = True
+        self.draw_avg_color = False
+        self.draw_coordinates = False
+        self.draw_solution = True
+        self.draw_miniature = True
 
         self.root = FloatLayout()
 
@@ -91,37 +100,37 @@ class RubiksDetectionApp(App):
         settings_dropdown = DropDown()
         contours_button = Button(text='Contours', size_hint_y=None, height=44)
         contours_button.bind(on_release=self.on_contours_button_press)
-        contours_button.background_color = condition_color(self.camera.draw_contours)
+        contours_button.background_color = condition_color(self.draw_contours)
         settings_dropdown.add_widget(contours_button)
 
         face_button = Button(text='Face', size_hint_y=None, height=44)
         face_button.bind(on_release=self.on_face_button_press)
-        face_button.background_color = condition_color(self.camera.draw_face)
+        face_button.background_color = condition_color(self.draw_face)
         settings_dropdown.add_widget(face_button)
 
         orientation_button = Button(text='Orientation', size_hint_y=None, height=44)
         orientation_button.bind(on_release=self.on_orientation_button_press)
-        orientation_button.background_color = condition_color(self.camera.draw_orientation)
+        orientation_button.background_color = condition_color(self.draw_orientation)
         settings_dropdown.add_widget(orientation_button)
 
         avg_color_button = Button(text='Avg Color', size_hint_y=None, height=44)
         avg_color_button.bind(on_release=self.on_avg_color_button_press)
-        avg_color_button.background_color = condition_color(self.camera.draw_avg_color)
+        avg_color_button.background_color = condition_color(self.draw_avg_color)
         settings_dropdown.add_widget(avg_color_button)
 
         coordinates_button = Button(text='Coordinates', size_hint_y=None, height=44)
         coordinates_button.bind(on_release=self.on_coordinates_button_press)
-        coordinates_button.background_color = condition_color(self.camera.draw_coordinates)
+        coordinates_button.background_color = condition_color(self.draw_coordinates)
         settings_dropdown.add_widget(coordinates_button)
 
         miniature_button = Button(text='Miniature', size_hint_y=None, height=44)
         miniature_button.bind(on_release=self.on_miniature_button_press)
-        miniature_button.background_color = condition_color(self.camera.draw_miniature)
+        miniature_button.background_color = condition_color(self.draw_miniature)
         settings_dropdown.add_widget(miniature_button)
 
         solution_button = Button(text='Solution', size_hint_y=None, height=44)
         solution_button.bind(on_release=self.on_solution_button_press)
-        solution_button.background_color = condition_color(self.camera.draw_solution)
+        solution_button.background_color = condition_color(self.draw_solution)
         settings_dropdown.add_widget(solution_button)
 
         image_spinner = Spinner(text="Display mode",
@@ -151,36 +160,51 @@ class RubiksDetectionApp(App):
         self.state.send('capture')
 
     def on_orientation_button_press(self, instance):
-        self.camera.draw_orientation = not self.camera.draw_orientation
-        instance.background_color = condition_color(self.camera.draw_orientation)
+        self.draw_orientation = not self.draw_orientation
+        instance.background_color = condition_color(self.draw_orientation)
 
     def on_contours_button_press(self, instance):
-        self.camera.draw_contours = not self.camera.draw_contours
-        instance.background_color = condition_color(self.camera.draw_contours)
+        self.draw_contours = not self.draw_contours
+        instance.background_color = condition_color(self.draw_contours)
 
     def on_face_button_press(self, instance):
-        self.camera.draw_face = not self.camera.draw_face
-        instance.background_color = condition_color(self.camera.draw_face)
+        self.draw_face = not self.draw_face
+        instance.background_color = condition_color(self.draw_face)
 
     def on_avg_color_button_press(self, instance):
-        self.camera.draw_avg_color = not self.camera.draw_avg_color
-        instance.background_color = condition_color(self.camera.draw_avg_color)
+        self.draw_avg_color = not self.draw_avg_color
+        instance.background_color = condition_color(self.draw_avg_color)
 
     def on_coordinates_button_press(self, instance):
-        self.camera.draw_coordinates = not self.camera.draw_coordinates
-        instance.background_color = condition_color(self.camera.draw_coordinates)
+        self.draw_coordinates = not self.draw_coordinates
+        instance.background_color = condition_color(self.draw_coordinates)
 
     def on_solution_button_press(self, instance):
-        self.camera.draw_solution = not self.camera.draw_solution
-        instance.background_color = condition_color(self.camera.draw_solution)
+        self.draw_solution = not self.draw_solution
+        instance.background_color = condition_color(self.draw_solution)
 
     def on_miniature_button_press(self, instance):
-        self.camera.draw_miniature = not self.camera.draw_miniature
-        instance.background_color = condition_color(self.camera.draw_miniature)
+        self.draw_miniature = not self.draw_miniature
+        instance.background_color = condition_color(self.draw_miniature)
 
     def on_mirror_button_press(self, instance):
         self.camera.display_mirror = not self.camera.display_mirror
         instance.background_color = condition_color(self.camera.display_mirror)
+
+    def on_new_frame(self, frame):
+        self.detection_engine.process_frame(frame)
+
+    def debug_frame(self, frame):
+        frame = self.detection_engine.debug_frame(frame,
+                                                    draw_orientation= self.draw_orientation,
+                                                    draw_contours=self.draw_contours,
+                                                    draw_face=self.draw_face,
+                                                    draw_avg_color=self.draw_avg_color,
+                                                    draw_coordinates=self.draw_coordinates,
+                                                    draw_miniature=self.draw_miniature)
+        if self.detection_engine.last_face is not None and self.draw_solution:
+            frame, _status = self.solution_display.display(frame, self.detection_engine.last_face)
+        return frame
 
     def on_stop(self):
         # without this, app will not exit even if the window is closed
