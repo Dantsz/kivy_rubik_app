@@ -16,9 +16,14 @@ import asyncio
 from RubiksDetection.rpd.detection_engine import DetectionEngine
 from RubiksDetection.rpd.labeling import LabelingEngine
 from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
+from RubiksDetection.rpd import viewport_properties as vp
 
 from camera import RubikCamera
 import app_state
+
+# Don't have better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
+if platform == 'android':
+    vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH
 
 def condition_color(condition: bool) -> str:
     """Return a color based on a condition."""
@@ -33,7 +38,12 @@ class RubiksDetectionApp(App):
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.solution_display = SolutionDisplayEngine()
-        self.camera = RubikCamera(on_new_frame=self.on_new_frame, debug_frame=self.debug_frame, fps=15)
+        # rotate 90 clockwise if on android
+        if platform == 'android':
+            rotated = True
+        else:
+            rotated = False
+        self.camera = RubikCamera(on_new_frame=self.on_new_frame,rotated=rotated, debug_frame=self.debug_frame, fps=15)
         self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine, self.solution_display)
 
         self.keep_ratio = False

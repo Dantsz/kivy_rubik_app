@@ -24,20 +24,18 @@ class RubikCamera(Image):
     Displays the camera view with added debug information.
     """
 
-    def __init__(self, fps, debug_frame, on_new_frame,  **kwargs):
+    def __init__(self, rotated: bool, fps, debug_frame, on_new_frame,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
         self.on_capture_reset()
 
         self.display_mode = "Original"
         self.display_mirror = False
+        self.display_rotated = rotated
 
         self.on_new_frame = on_new_frame
         self.debugframe = debug_frame
 
-        # Don't havea better place to put this, but the android camera is rotated 90 degrees so viewport properties need to be swapped
-        if platform == 'android':
-            vp.WIDTH, vp.HEIGHT = vp.HEIGHT, vp.WIDTH
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def update(self, dt):
@@ -48,8 +46,7 @@ class RubikCamera(Image):
         # else:
             # logging.info(f"Got frame({ret}): {frame.shape}")
         if ret:
-            # rotate 90 clockwise if on android
-            if platform == 'android':
+            if self.display_rotated:
                 frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
 
             frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
