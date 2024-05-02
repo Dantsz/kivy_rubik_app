@@ -64,7 +64,7 @@ class RubikCamera(Image):
             if self.display_mode == "Original":
                 pass
             if self.display_mode == "Filtered":
-                frame = filtering.canny_amax_adaptive_filter(frame)
+                frame = filtering.amax_adaptive_filter(frame)
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
             frame = self.debugframe(frame)
