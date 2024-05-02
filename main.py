@@ -34,7 +34,7 @@ class RubiksDetectionApp(App):
 
     def build(self):
         """Build a camera app."""
-        
+
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.solution_display = SolutionDisplayEngine()
