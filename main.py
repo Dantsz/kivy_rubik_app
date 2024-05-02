@@ -40,9 +40,9 @@ class RubiksDetectionApp(App):
 
         self.root.add_widget(self.camera)
 
-        setting_layout = BoxLayout(orientation='vertical',
+        setting_layout = BoxLayout(orientation='horizontal',
                                    size_hint=(None, None),
-                                   size=(100, 50),
+                                   size=(200, 50),
                                    pos_hint={'right': 1, 'top': 1})
 
         display_dropdown = self.build_display_dropdown()
