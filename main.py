@@ -34,7 +34,7 @@ class RubiksDetectionApp(App):
 
     def build(self):
         """Build a camera app."""
-
+        
         self.detection_engine = DetectionEngine()
         self.labeling_engine = LabelingEngine()
         self.solution_display = SolutionDisplayEngine()
@@ -152,6 +152,11 @@ class RubiksDetectionApp(App):
 
     def build_settings_dropdown(self) -> DropDown:
         settings_dropdown = DropDown()
+        rotated_button = Button(text='Rotate', size_hint_y=None, height=44)
+        rotated_button.bind(on_release=self.on_rotate_button_press)
+        rotated_button.background_color = condition_color(self.camera.display_rotated)
+        settings_dropdown.add_widget(rotated_button)
+
         mirror_button = Button(text='Mirror', size_hint_y=None, height=44)
         mirror_button.bind(on_release=self.on_mirror_button_press)
         mirror_button.background_color = condition_color(self.camera.display_mirror)
@@ -200,6 +205,10 @@ class RubiksDetectionApp(App):
     def on_mirror_button_press(self, instance):
         self.camera.display_mirror = not self.camera.display_mirror
         instance.background_color = condition_color(self.camera.display_mirror)
+
+    def on_rotate_button_press(self, instance):
+        self.camera.display_rotated = not self.camera.display_rotated
+        instance.background_color = condition_color(self.camera.display_rotated)
 
     def on_new_frame(self, frame):
         self.detection_engine.process_frame(frame)
