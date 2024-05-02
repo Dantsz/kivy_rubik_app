@@ -27,6 +27,7 @@ class RubikCamera(Image):
     def __init__(self, rotated: bool, fps, debug_frame, on_new_frame,  **kwargs):
         super(RubikCamera, self).__init__(**kwargs)
         self.allow_stretch = True
+        self.keep_ratio = False
         self.on_capture_reset()
 
         self.display_mode = "Original"
