@@ -89,8 +89,8 @@ class RubikCamera(Image):
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture
-            buf1 = cv.flip(frame, 0)
-            buf = buf1.tostring()
+            frame = cv.flip(frame, 0)
+            buf = frame.tostring()
             image_texture = Texture.create(
                 size=(frame.shape[1], frame.shape[0]), colorfmt='rgb')
             image_texture.blit_buffer(buf, colorfmt='rgb', bufferfmt='ubyte')
