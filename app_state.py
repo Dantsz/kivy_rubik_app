@@ -58,8 +58,8 @@ class RubikDetectionState(StateMachine):
     def on_capture(self):
         logging.info(f"Capturing face: {len(self.labeling_engine.face_data)}")
         if(self.detection_engine.last_face is not None):
-            self.labeling_engine.consume_face(self.detection_engine.last_face)
-            self.detection_engine.last_face = None
+            face = self.detection_engine.pop_face()
+            self.labeling_engine.consume_face(face)
         if self.labeling_engine.is_complete():
             try:
                 self.labeling_engine.fit()
