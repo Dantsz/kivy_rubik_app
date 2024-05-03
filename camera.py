@@ -51,8 +51,6 @@ class RubikCamera(Image):
                 frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
 
             frame = cv.resize(frame, (viewport_properties.WIDTH, viewport_properties.HEIGHT))
-            if self.display_mirror:
-                frame = cv.flip(frame, 1)
 
             self.on_new_frame(frame)
 
@@ -65,7 +63,9 @@ class RubikCamera(Image):
                 frame = filtering.amax_adaptive_filter(frame)
                 frame = cv.cvtColor(frame, cv.COLOR_GRAY2BGR)
 
-            frame = self.debugframe(frame)
+            if self.display_mirror:
+                frame = cv.flip(frame, 1)
+            frame = self.debugframe(frame, self.display_mirror)
             # convert frame to rgb
             frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
             # convert it to texture

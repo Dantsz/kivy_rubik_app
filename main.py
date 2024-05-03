@@ -213,16 +213,17 @@ class RubiksDetectionApp(App):
     def on_new_frame(self, frame):
         self.detection_engine.process_frame(frame)
 
-    def debug_frame(self, frame):
+    def debug_frame(self, frame, mirrored):
         frame = self.detection_engine.debug_frame(frame,
                                                     draw_orientation= self.draw_orientation,
                                                     draw_contours=self.draw_contours,
                                                     draw_face=self.draw_face,
                                                     draw_avg_color=self.draw_avg_color,
                                                     draw_coordinates=self.draw_coordinates,
-                                                    draw_miniature=self.draw_miniature)
+                                                    draw_miniature=self.draw_miniature,
+                                                    mirrored=mirrored)
         if self.detection_engine.last_face is not None and self.draw_solution:
-            frame, _status = self.solution_display.display(frame, self.detection_engine.last_face)
+            frame, _status = self.solution_display.display(frame, self.detection_engine.last_face, mirrored=mirrored)
         return frame
 
     def on_stop(self):
