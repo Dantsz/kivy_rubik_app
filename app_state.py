@@ -57,15 +57,14 @@ class RubikDetectionState(StateMachine):
 
     def on_capture(self):
         logging.info(f"Capturing face: {len(self.labeling_engine.face_data)}")
-        if(self.detection_engine.last_face is not None):
-            face = self.detection_engine.pop_face()
+        face = self.detection_engine.pop_face()
+        if(face is not None):
             self.labeling_engine.consume_face(face)
         if self.labeling_engine.is_complete():
             try:
                 self.labeling_engine.fit()
             except ValueError as e:
                 logging.warning(f"Cube is inconsistent: {e}")
-                self.solution_engine.display_errors = True
                 self.__setup_solution_display_fail()
                 return
             img = self.labeling_engine.debug_image_2d()
@@ -81,6 +80,7 @@ class RubikDetectionState(StateMachine):
 
 
     def __setup_solution_display_fail(self):
+       self.solution_engine.display_errors = True
        def __on_start_display_error():
             self.send('inconsistencyDetected')
        self.solution_engine.on_solution_start =  __on_start_display_error
