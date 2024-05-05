@@ -86,7 +86,7 @@ class RubikDetectionState(StateMachine):
             self.send('inconsistencyDetected')
        self.solution_engine.on_solution_start =  __on_start_display_error
 
-    def __setup_solution_display(self, moves: list[Move]):
+    def __setup_solution_display(self, moves: list[solve.Move]):
             def __on_start_display():
                 self.send('startDisplay')
             def __on_done_display():
