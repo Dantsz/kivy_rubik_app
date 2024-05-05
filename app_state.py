@@ -74,7 +74,7 @@ class RubikDetectionState(StateMachine):
             # cv.imwrite("rubik_state_3d.png", img)
             logging.info(f"Cube is {self.labeling_engine.stateString()}")
 
-            moves = solve.solve_but_better(self.labeling_engine.state())
+            moves = solve.solve(self.labeling_engine.state())
             print(moves)
             print(self.labeling_engine.color_centers)
             self.__setup_solution_display(moves)
