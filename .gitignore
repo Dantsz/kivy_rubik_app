@@ -4,3 +4,4 @@ __pycache__/
 *.png
 .conda/
 .vscode/settings.json
+.venv/
