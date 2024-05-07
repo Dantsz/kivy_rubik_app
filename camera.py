@@ -1,10 +1,5 @@
 import RubiksDetection.rpd.filtering as filtering
 import RubiksDetection.rpd.viewport_properties as viewport_properties
-import RubiksDetection.rpd.solve as solve
-
-from RubiksDetection.rpd.detection_engine import DetectionEngine
-from RubiksDetection.rpd.labeling import LabelingEngine
-from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
 
 import cv2 as cv
 import numpy as np
@@ -13,8 +8,6 @@ import logging
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
-from kivy.uix.button import Button
-from kivy.utils import platform
 
 import RubiksDetection.rpd.viewport_properties as vp
 
