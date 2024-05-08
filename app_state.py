@@ -1,10 +1,10 @@
 import logging
 from statemachine import StateMachine, State
 
-from RubiksDetection.rpd.detection_engine import DetectionEngine
-from RubiksDetection.rpd.labeling import LabelingEngine
-from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
-import RubiksDetection.rpd.solve as solve
+from RubiksDetection.detection_engine import DetectionEngine
+from RubiksDetection.labeling import LabelingEngine
+from RubiksDetection.solution_display import SolutionDisplayEngine
+import RubiksDetection.solve as solve
 
 import cv2 as cv
 class RubikDetectionState(StateMachine):

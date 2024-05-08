@@ -13,10 +13,10 @@ import logging
 
 import asyncio
 
-from RubiksDetection.rpd.detection_engine import DetectionEngine
-from RubiksDetection.rpd.labeling import LabelingEngine
-from RubiksDetection.rpd.solution_display import SolutionDisplayEngine
-from RubiksDetection.rpd import viewport_properties as vp
+from RubiksDetection.detection_engine import DetectionEngine
+from RubiksDetection.labeling import LabelingEngine
+from RubiksDetection.solution_display import SolutionDisplayEngine
+from RubiksDetection import viewport_properties as vp
 
 from camera import RubikCamera
 import app_state

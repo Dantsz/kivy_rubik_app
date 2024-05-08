@@ -1,5 +1,5 @@
-import RubiksDetection.rpd.filtering as filtering
-import RubiksDetection.rpd.viewport_properties as viewport_properties
+import RubiksDetection.filtering as filtering
+import RubiksDetection.viewport_properties as viewport_properties
 
 import cv2 as cv
 import numpy as np
@@ -9,7 +9,7 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 
-import RubiksDetection.rpd.viewport_properties as vp
+import RubiksDetection.viewport_properties as vp
 
 class RubikCamera(Image):
     """Camera widget running rubik face detection.
