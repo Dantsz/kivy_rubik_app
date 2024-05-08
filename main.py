@@ -162,6 +162,11 @@ class RubiksDetectionApp(App):
         mirror_button.background_color = condition_color(self.camera.display_mirror)
         settings_dropdown.add_widget(mirror_button)
 
+        clustering_spinner = Spinner(text="Closest",
+                                     values=("Closest", "KMeans"), size_hint_y=None, height=44)
+        clustering_spinner.bind(text=self.on_clustering_change)
+        settings_dropdown.add_widget(clustering_spinner)
+
         return settings_dropdown
 
     def on_settings_button_press(self, instance):
@@ -170,6 +175,14 @@ class RubiksDetectionApp(App):
     def on_display_mode_change(self, instance, value):
         print("Display mode changed to: " + value)
         self.camera.change_display_mode(value)
+
+    def on_clustering_change(self, instance, value):
+        print("Clustering changed to: " + value)
+        match value:
+            case "Closest":
+                self.labeling_engine.clusteting_method = 0
+            case "KMeans":
+                self.labeling_engine.clusteting_method = 1
 
     def on_capture_button_press(self, instance):
         self.state.send('capture')
