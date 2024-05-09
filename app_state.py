@@ -67,11 +67,12 @@ class RubikDetectionState(StateMachine):
                 logging.warning(f"Cube is inconsistent: {e}")
                 self.__setup_solution_display_fail()
                 return
-            img = self.labeling_engine.debug_image_2d()
-            cv.imwrite("rubik_state_2d.png", img)
+            finally:
+                img = self.labeling_engine.debug_image_2d()
+                cv.imwrite("rubik_state_2d.png", img)
 
-            img = self.labeling_engine.debug_image_3d()
-            cv.imwrite("rubik_state_3d.png", img)
+                img = self.labeling_engine.debug_image_3d()
+                cv.imwrite("rubik_state_3d.png", img)
             logging.info(f"Cube is {self.labeling_engine.stateString()}")
 
             moves = solve.solve(self.labeling_engine.state())
