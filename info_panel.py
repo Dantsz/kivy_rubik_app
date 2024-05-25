@@ -13,8 +13,8 @@ class InfoPanel(ModalView):
         self.layout.orientation = 'lr-tb'
         self.add_widget(self.layout)
 
-        self.ket_time = Label(text="Time")
-        self.layout.add_widget(self.ket_time)
+        self.key_time = Label(text="Time")
+        self.layout.add_widget(self.key_time)
         self.value_time_label = Label()
         self.layout.add_widget(self.value_time_label)
 
