@@ -66,6 +66,7 @@ class RubikDetectionState(StateMachine):
             except ValueError as e:
                 logging.warning(f"Cube is inconsistent: {e}")
                 self.__setup_solution_display_fail()
+                self.__signal_labeling_result(False)
                 return
             finally:
                 img = self.labeling_engine.debug_image_2d()
@@ -75,6 +76,7 @@ class RubikDetectionState(StateMachine):
                 cv.imwrite("rubik_state_3d.png", img)
             logging.info(f"Cube is {self.labeling_engine.stateString()}")
 
+            self.__signal_labeling_result(True)
             moves = solve.solve(self.labeling_engine.state())
             print(moves)
             print(self.labeling_engine.color_centers)
@@ -121,8 +123,13 @@ class RubikDetectionState(StateMachine):
         # self._graph().write_png(img_path)
         pass
 
-    def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_display_engine: SolutionDisplayEngine):
+    def __signal_labeling_result(self, result):
+        if self.__report_labeling_result is not None:
+            self.__report_labeling_result(result)
+
+    def __init__(self, detection_engine: DetectionEngine, labeling_engine: LabelingEngine, solution_display_engine: SolutionDisplayEngine, report_labeling_result: callable = None):
         super().__init__()
         self.detection_engine = detection_engine
         self.labeling_engine = labeling_engine
+        self.__report_labeling_result = report_labeling_result
         self.solution_engine = solution_display_engine

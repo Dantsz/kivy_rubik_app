@@ -5,7 +5,11 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.spinner import Spinner
 from kivy.uix.dropdown import DropDown
+from kivy.uix.label import Label
+from kivy.uix.modalview import ModalView
 from kivy.utils import platform, get_color_from_hex
+from kivy.clock import Clock
+from info_panel import InfoPanel
 
 
 import cv2 as cv
@@ -44,7 +48,7 @@ class RubiksDetectionApp(App):
         else:
             rotated = False
         self.camera = RubikCamera(on_new_frame=self.on_new_frame,rotated=rotated, debug_frame=self.debug_frame, fps=15)
-        self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine, self.solution_display)
+        self.state = app_state.RubikDetectionState(self.detection_engine, self.labeling_engine, self.solution_display, report_labeling_result=self.on_labeling_result)
 
         self.keep_ratio = False
         self.draw_orientation = False
@@ -61,7 +65,7 @@ class RubiksDetectionApp(App):
 
         setting_layout = BoxLayout(orientation='horizontal',
                                    size_hint=(None, None),
-                                   size=(200, 50),
+                                   size=(300, 50),
                                    pos_hint={'right': 1, 'top': 1})
 
         display_dropdown = self.build_display_dropdown()
@@ -72,8 +76,14 @@ class RubiksDetectionApp(App):
         settings_button = Button(text='Settings')
         settings_button.bind(on_release=settings_dropdown.open)
 
+        self.info_panel = InfoPanel()
+        Clock.schedule_interval(self.on_info_update, 1)
+        info_button = Button(text='Info')
+        info_button.bind(on_release=self.on_info_button_press)
+
         setting_layout.add_widget(display_button)
         setting_layout.add_widget(settings_button)
+        setting_layout.add_widget(info_button)
 
         self.root.add_widget(setting_layout)
 
@@ -225,6 +235,18 @@ class RubiksDetectionApp(App):
 
     def on_new_frame(self, frame):
         self.detection_engine.process_frame(frame)
+        self.info_panel.on_update_capture_incremented()
+        self.info_panel.on_update_last_detection_time(self.detection_engine.last_process_frame_duration)
+        if self.detection_engine.last_frame_detected_face():
+            self.info_panel.on_update_faces_incremented()
+
+    def on_labeling_result(self,succeded: bool):
+        if succeded:
+            logging.info("Cube labeling succeded")
+        else:
+            logging.info("Cube labeling failed")
+        self.info_panel.on_update_last_labeling_time(succeded, self.labeling_engine.last_fit_duration)
+
 
     def debug_frame(self, frame, mirrored):
         frame = self.detection_engine.debug_frame(frame,
@@ -242,6 +264,13 @@ class RubiksDetectionApp(App):
     def on_stop(self):
         # without this, app will not exit even if the window is closed
         self.camera.on_stop()
+
+    def on_info_button_press(self, instance):
+        self.info_panel.open()
+
+    def on_info_update(self, dt):
+        # self.info_panel.on_update(dt)
+        pass
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
