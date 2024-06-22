@@ -258,7 +258,7 @@ class RubiksDetectionApp(App):
                                                     draw_miniature=self.draw_miniature,
                                                     mirrored=mirrored)
         if self.detection_engine.last_face is not None and self.draw_solution:
-            frame, _status = self.solution_display.display(frame, self.detection_engine.last_face, mirrored=mirrored)
+            frame, _status = self.solution_display.display(frame, self.detection_engine.last_face, mirrored=mirrored, draw_miniature=self.draw_miniature)
         return frame
 
     def on_stop(self):
