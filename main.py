@@ -238,7 +238,7 @@ class RubiksDetectionApp(App):
         self.info_panel.on_update_capture_incremented()
         self.info_panel.on_update_last_detection_time(self.detection_engine.last_process_frame_duration)
         if self.detection_engine.last_frame_detected_face():
-            self.info_panel.on_update_faces_incremented()
+            self.info_panel.on_update_faces_incremented(len(self.detection_engine.last_contours))
 
     def on_labeling_result(self,succeded: bool):
         if succeded:
