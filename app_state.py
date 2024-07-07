@@ -74,11 +74,12 @@ class RubikDetectionState(StateMachine):
                 self.__setup_solution_display_fail()
                 self.__signal_labeling_result(False)
             finally:
-                img = self.labeling_engine.debug_image_2d()
-                cv.imwrite("rubik_state_2d.png", img)
+                # img = self.labeling_engine.debug_image_2d()
+                # cv.imwrite("rubik_state_2d.png", img)
 
-                img = self.labeling_engine.debug_image_3d()
-                cv.imwrite("rubik_state_3d.png", img)
+                # img = self.labeling_engine.debug_image_3d()
+                # cv.imwrite("rubik_state_3d.png", img)
+                pass
 
     def __setup_solution_display_fail(self):
        self.solution_engine.display_errors = True

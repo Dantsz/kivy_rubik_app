@@ -7,7 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 class InfoPanel(ModalView):
     def __init__(self, **kwargs):
         super(InfoPanel, self).__init__(**kwargs)
-        self.size_hint = (0.8, 0.8)
+        self.size_hint = (0.9, 0.8)
         self.auto_dismiss = True
         self.layout = GridLayout(cols=2, spacing=10)
         self.layout.orientation = 'lr-tb'
@@ -28,12 +28,12 @@ class InfoPanel(ModalView):
         self.value_faces_label = Label()
         self.layout.add_widget(self.value_faces_label)
 
-        self.key_avg_contours_in_frames_with_faces_label = Label(text="Average contours in frames with face")
+        self.key_avg_contours_in_frames_with_faces_label = Label(text="Average contours\n in frames with face")
         self.layout.add_widget(self.key_avg_contours_in_frames_with_faces_label)
         self.value_avg_contours_in_frames_with_faces_label = Label()
         self.layout.add_widget(self.value_avg_contours_in_frames_with_faces_label)
 
-        self.key_variance_contours_in_frames_with_faces_label = Label(text="Variance of contours in frames with face")
+        self.key_variance_contours_in_frames_with_faces_label = Label(text="Variance of contours\n in frames with face")
         self.layout.add_widget(self.key_variance_contours_in_frames_with_faces_label)
         self.value_variance_contours_in_frames_with_faces_label = Label()
         self.layout.add_widget(self.value_variance_contours_in_frames_with_faces_label)
@@ -84,8 +84,8 @@ class InfoPanel(ModalView):
         self.value_variance_contours_in_frames_with_faces =  (self.value_square_sum_contours_in_frames_with_faces / self.value_faces) - (self.value_avg_contours_in_frames_with_faces * self.value_avg_contours_in_frames_with_faces)
 
         self.value_faces_label.text = str(self.value_faces)
-        self.value_avg_contours_in_frames_with_faces_label.text = str(self.value_avg_contours_in_frames_with_faces)
-        self.value_variance_contours_in_frames_with_faces_label.text = str(self.value_variance_contours_in_frames_with_faces)
+        self.value_avg_contours_in_frames_with_faces_label.text = f'{self.value_avg_contours_in_frames_with_faces:.4f}'
+        self.value_variance_contours_in_frames_with_faces_label.text = f'{self.value_variance_contours_in_frames_with_faces:.4f}'
 
     def on_update_last_detection_time(self, value):
         self.value_last_detection_time = value
@@ -110,9 +110,9 @@ class InfoPanel(ModalView):
         self.value_faces_label.text = str(self.value_faces)
         self.value_avg_contours_in_frames_with_faces = 0
         self.value_square_sum_contours_in_frames_with_faces = 0
-        self.value_avg_contours_in_frames_with_faces_label.text = str(self.value_avg_contours_in_frames_with_faces)
+        self.value_avg_contours_in_frames_with_faces_label.text = f'{self.value_avg_contours_in_frames_with_faces:.4f}'
         self.value_variance_contours_in_frames_with_faces = 0
-        self.value_variance_contours_in_frames_with_faces_label.text = str(self.value_variance_contours_in_frames_with_faces)
+        self.value_variance_contours_in_frames_with_faces_label.text = f'{self.value_variance_contours_in_frames_with_faces:.4f}'
         self.value_last_detection_time = 0
         self.value_last_detection_time_label.text = str(self.value_last_detection_time)
         self.value_avg_detection_time = 0
